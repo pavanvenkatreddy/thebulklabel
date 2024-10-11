@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload CSV for ZPL Generation</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px;
+        }
+        input, button {
+            padding: 10px;
+            font-size: 16px;
+            margin: 5px;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Upload CSV for ZPL Generation</h1>
+
+    <form id="csvForm" enctype="multipart/form-data">
+        <label for="csvFile">Upload a CSV File with Barcodes:</label><br>
+        <input type="file" id="csvFile" name="csvFile" accept=".csv" required><br><br>
+        <button type="submit">Submit CSV</button>
+    </form>
+
+    <p id="response"></p>
+
+    <script>
+        document.getElementById('csvForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData();
+            const csvFile = document.getElementById('csvFile').files[0];
+            formData.append('csvFile', csvFile);
+
+            axios.post('/upload_csv', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+            .then(function (response) {
+                document.getElementById('response').innerHTML = 'Response: ' + response.data.message;
+            })
+            .catch(function (error) {
+                document.getElementById('response').innerHTML = 'Error: ' + error;
+                console.error(error);
+            });
+        });
+    </script>
+
+</body>
+</html>
